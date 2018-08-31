@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<!-- ************************************************************************
+
+	 Wialon Apps - WEB applications, developed on the basis of SDK for Wialon Hosting and Wialon Kit.
+
+	 http://apps.gurtam.com
+
+	 Copyright:
+		 2002-2013 Gurtam, http://gurtam.com
+
+	 License:
+		 MIT: https://github.com/wialon/wialon-app-messagesmanager/blob/master/LICENSE-MIT
+
+	 Authors:
+		 * Gurtam
+
+************************************************************************ -->
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<title>Messages Manager</title>
+		<link rel="icon" type="image/png" href="./img/favicon.ico">
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+		<meta http-equiv="pragma" content="no-cache"/>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+		<meta name="apple-mobile-web-app-capable" content="yes"/>
+		<meta names="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+
+		<link rel="stylesheet" media="screen" type="text/css" href="./css/jquery-ui-1.10.0.custom.min.css"/>
+		<!-- <link rel="stylesheet" media="screen" type="text/css" href="./css/jquery-ui-timepicker-addon.css"/> -->
+
+
+		<script type="text/javascript" src="./js/jquery-1.8.3.min.js"></script>
+		<script type="text/javascript" src="./js/jquery-ui-1.10.0.custom.min.js"></script>
+		<!-- <script type="text/javascript" src="./js/jquery.activity-indicator-1.0.0.min.js"></script> -->
+
+		<script type="text/javascript" src="./js/underi18n.js"></script>
+		<!-- <script type="text/javascript" src="./js/jquery-ui-timepicker-addon.js"></script> -->
+		<script type="text/javascript" src="./js/jquery-ui-sliderAccess.js"></script>
+		<script type="text/javascript" src="./js/underscore-min.js"></script>
+
+		<script type="text/javascript" src="./js/jquery.textbox.js"></script>
+		<script type="text/javascript" src="./js/sprintfWrapper.js"></script>
+		<script type="text/javascript" src="./js/jquery.localisation.js"></script>
+		<script type="text/javascript" src="./js/table.js"></script>
+		<script src="/plugins/wialon/interval/interval.wialon.min.js"></script>
+		<script type="text/javascript" src="./js/script.min.js"></script>
+		<link rel="stylesheet" type="text/css" href="/plugins/wialon/interval/interval.wialon.min.css"/>
+		<link rel="stylesheet" media="screen" type="text/css" href="./css/style.min.css"/>
+	</head>
+	<body
+		<!-- BEGIN: Underscore Template Definition. See: http://underscorejs.org/#template. -->
+		<script type="text/template" class="template" id="data_header">
+			<tr>
+				<th class="check-cell"><input type="checkbox" id="check_all" style="display:<%=display%>"/></th>
+				<th class="index-cell" id="nrowonpage-wrap">&nbsp;</th>
+				<th class="sort down" id="t"><%=tm%></th>
+				<th><%=lon%></th>
+				<th><%=lat%></th>
+				<th><%=alt%></th>
+				<th><%=loc%></th>
+				<th class="sort" id="speed"><%=speed%></th>
+				<th><%=course%></th>
+				<th class="sort" id="scount"><%=scount%></th>
+				<th><%=io%></th>
+				<th><%=params%></th>
+			</tr>
+		</script>
+		<script type="text/template" class="template" id="data_row">
+			<tr id="msg_<%=id%>">
+				<td class="check-cell"><input id="msg_check_<%=id%>"  type="checkbox" style="display:<%=display%>" <%=disabled%>/></td>
+				<td class="index-cell"><span class="number"><%=index%>.</span></td>
+				<td style="min-width:145px;"><%=tm%></td>
+				<td style="min-width:82px;"><%=lon%></td>
+				<td style="min-width:82px;"><%=lat%></td>
+				<td style="min-width:80px;"><%=alt%></td>
+				<td style="min-width:200px;" class="location"><%=loc%></td>
+				<td style="min-width:105px;"><%=speed%></td>
+				<td style="min-width:70px;"><%=course%></td>
+				<td style="min-width:80px;"><%=scount%></td>
+				<td style="min-width:60px;"><%=idata%>/<%=odata%></td>
+				<td style="min-width:90px;" class="last-col"><%=params%></td>
+			</tr>
+		</script>
+		<script type="text/template" class="template" id="sms_header">
+			<tr>
+				<th class="check-cell"><input type="checkbox" id="check_all" style="display:<%=display%>"/></th>
+				<th class="index-cell" id="nrowonpage-wrap">&nbsp;</th>
+				<th class="sort down" id="t"><%=tm%></th>
+				<th class="sort" id="text"><%=text%></th>
+				<th class="sort" id="phone"><%=phone%></th>
+			</tr>
+		</script>
+		<script type="text/template" class="template" id="sms_row">
+			<tr id="msg_<%=id%>">
+				<td class="check-cell"><input id="msg_check_<%=id%>"  type="checkbox" style="display:<%=display%>" <%=disabled%>/></td>
+				<td class="index-cell"><span class="number"><%=index%>.</span></td>
+				<td style="min-width:145px;"><%=tm%></td>
+				<td style="min-width:90px;"><%=text%></td>
+				<td style="min-width:82px;" class="last-col"><%=phone%></td>
+			</tr>
+		</script>
+		<script type="text/template" class="template" id="command_header">
+			<tr>
+				<th class="check-cell"><input type="checkbox" id="check_all" style="display:<%=display%>"/></th>
+				<th class="index-cell" id="nrowonpage-wrap">&nbsp;</th>
+				<th class="sort down" id="t"><%=tm%></th>
+				<th class="sort" id="cname"><%=cname%></th>
+				<th class="sort" id="ctype"><%=ctype%></th>
+				<th class="sort" id="cparams"><%=cparams%></th>
+				<th class="sort" id="user"><%=user%></th>
+				<th class="sort" id="channel"><%=channel%></th>
+				<th class="sort" id="ext"><%=extime%></th>
+			</tr>
+		</script>
+		<script type="text/template" class="template" id="command_row">
+			<tr id="msg_<%=id%>">
+				<td class="check-cell"><input id="msg_check_<%=id%>"  type="checkbox" style="display:<%=display%>" <%=disabled%>/></td>
+				<td class="index-cell"><span class="number"><%=index%>.</span></td>
+				<td style="min-width:145px;"><%=tm%></td>
+				<td style="min-width:90px;"><%=cname%></td>
+				<td style="min-width:90px;"><%=ctype%></td>
+				<td style="min-width:150px;"><%=cparams%></td>
+				<td style="min-width:105px;" class="user"><%=user%></td>
+				<td style="min-width:65px;"><%=channel%></td>
+				<td style="min-width:145px;" class="last-col"><%=extime%></td>
+			</tr>
+		</script>
+		<script type="text/template" class="template" id="event_header">
+			<tr>
+				<th class="check-cell"><input type="checkbox" id="check_all" style="display:<%=display%>"/></th>
+				<th class="index-cell" id="nrowonpage-wrap">&nbsp;</th>
+				<th class="sort down" id="t"><%=tm%></th>
+				<th class="sort" id="type"><%=type%></th>
+				<th class="sort" id="text"><%=text%></th>
+				<th><%=lon%></th>
+				<th><%=lat%></th>
+				<th><%=params%></th>
+			</tr>
+		</script>
+		<script type="text/template" class="template" id="event_row">
+			<tr id="msg_<%=id%>">
+				<td class="check-cell"><input id="msg_check_<%=id%>"  type="checkbox" style="display:<%=display%>" <%=disabled%>/></td>
+				<td class="index-cell"><span class="number"><%=index%>.</span></td>
+				<td style="min-width:145px;"><%=tm%></td>
+				<td style="min-width:50px;"><%=type%></td>
+				<td style="min-width:140px;"><%=text%></td>
+				<td style="min-width:82px;"><%=lon%></td>
+				<td style="min-width:82px;"><%=lat%></td>
+				<td style="min-width:90px;" class="last-col"><%=params%></td>
+			</tr>
+		</script>
+
+		<script type="text/template" class="template" id="ranging-time-tpl">
+			<div class="interval-wialon-container {className}" id="{id}">
+				<div class="iw-select">
+					<button data-period="0" type="button" class="iw-period-btn period_0">{yesterday}</button><button data-period="1" type="button" class="iw-period-btn period_1">{today}</button><button data-period="2" type="button" class="iw-period-btn period_2">{week}</button><button data-period="3" type="button" class="iw-period-btn period_3">{month}</button><button data-period="4" type="button" class="iw-period-btn period_4">{custom}</button>
+				</div>
+				<div class="iw-pickers">
+					<input type="text" class="iw-from" id="date-from" /> &ndash; <input type="text" class="iw-to" id="date-to" />
+					<button type="button" class="iw-time-btn">{ok}</button>
+				</div>
+				<div class="iw-labels">
+					<a href="#" class="iw-similar-btn past" data-similar="past"></a>
+					<span class="iw-label"></span>
+					<a href="#" class="iw-similar-btn future" data-similar="future"></a>
+				</div>
+			</div>
+		</script>
+		<script type="text/template" class="template" id="filter-tpl">
+		<div class="modal">
+			<div class="modal-header">
+				<div class="modal-controls"><div class="close">×</div></div>
+				<%_ Filtration %>
+			</div>
+			<div class="modal-body">
+				<div><label for="param"><%_ By parameter %></label><input type="text" name="param" value="" id="param" placeholder="<%_ name or value %>" title="<%_ You may use parameter's name or value or both. Wildcard symbols are supported as well. Example: adc?=0.6* %>"></div>
+				<div id="by_speed"><label for="speed_from"><%_ By speed %></label><input type="text" class="halfsize" name="speed_from" id="speed_from" value="" placeholder="<%_ from %>"><input type="text" class="halfsize" name="speed_to" id="speed_to" value="" placeholder="<%_ to %>"></div>
+				<div id="by_sat"><label for="sat_from"><%_ By satellites %></label><input type="text" class="halfsize" name="sat_from" id="sat_from" value="" placeholder="<%_ from %>"><input type="text" class="halfsize" name="sat_to" id="sat_to" value="" placeholder="<%_ to %>"></div>
+			</div>
+			<div class="modal-footer">
+				<span class="clear"><%_ Clear %></span>
+				<button class="btn ok close" id="save_settings"><%_ OK %></button>
+			</div>
+		</div>
+		</script>
+		<!-- END: Underscore Template Definition. -->
+
+		<div id="header">
+			<img id="logo" src="./img/logo.png" alt="Messages editor" />
+			<div id="app_name">Messages Manager</div>
+			<div id="help"></div>
+			<div class="clear"></div>
+		</div>
+		<div id="loading"></div>
+
+		<div class="table-content">
+			<div id="data-inputs">
+				<span><select class="input-select" id="units-select" style="width: 200px;"></select></span>
+				<span><img src="./img/par.png" id="unit_params"></img></span>
+				<span>
+					<span class="input-title" id="type_title"></span>
+					<select class="input-select" id="msg_type" style="width: 120px;"></select>
+				</span>
+				<span id="filter" title="Filter messages" class="filter"></span>
+				<span id="ranging-time-wrap" class="ranging-time-wrap">
+					<!-- template: ranging-time-tpl -->
+				</span>
+			</div>
+
+			<div class="separator"></div>
+
+			<div id="header-wrap">
+				<table class="ptable">
+					<thead></thead>
+				</table>
+			</div>
+
+			<div id="table-wrap">
+				<table id="paginated-table" class="ptable"><tbody></tbody></table>
+			</div>
+		</div>
+
+		<div class="table-footer">
+			<div id="table-instruments" class="clearfix">
+				<div class="pull-left">
+					<select id="nrowonpage" class="input-select">
+						<option value="10">10</option>
+						<option value="25">25</option>
+						<option value="50">50</option>
+						<option value="100">100</option>
+						<option value="500">500</option>
+						<option value="1000">1000</option>
+					</select>
+				</div>
+				<div class="pgroup-btn-wrap footer-center pull-left ">
+					<input id="top" type="button" class="btn" value=""><input id="prev" type="button" class="btn" value=""><span id="pcontrol" class="pcontrol">
+					</span><input id="next" type="button" class="btn" value=""><input id="last" type="button" class="btn" value="">
+				</div>
+				<div class="pull-right">
+					<div>
+						<button id="del_btn" type="button" class="btn" disabled></button>
+					</div>
+				</div>
+				<div class="clear"></div>
+			</div>
+
+		</div>
+
+		<div id="last_params">
+			<div>
+				<table id="params_table"></table>
+			</div>
+		</div>
+		<div id="filter_dialog" class="modal-overflow" style="display:none;"></div>
+	</body>
+</html>
